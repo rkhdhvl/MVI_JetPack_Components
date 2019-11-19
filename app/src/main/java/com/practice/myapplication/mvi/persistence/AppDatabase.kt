@@ -1,4 +1,4 @@
-package com.codingwithmitch.openapi.persistence
+package com.practice.myapplication.mvi.persistence
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

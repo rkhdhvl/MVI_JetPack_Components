@@ -7,13 +7,13 @@ import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
-import com.codingwithmitch.openapi.persistence.AppDatabase
-import com.codingwithmitch.openapi.persistence.AppDatabase.Companion.DATABASE_NAME
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.practice.myapplication.R
 import com.practice.myapplication.mvi.models.AuthToken
 import com.practice.myapplication.mvi.persistence.AccountPropertiesDao
+import com.practice.myapplication.mvi.persistence.AppDatabase
+import com.practice.myapplication.mvi.persistence.AppDatabase.Companion.DATABASE_NAME
 import com.practice.myapplication.mvi.persistence.AuthTokenDao
 import com.practice.myapplication.mvi.util.Constants
 import com.practice.myapplication.mvi.util.LiveDataCallAdapter
@@ -59,7 +59,7 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideAppDb(app : Application) :AppDatabase{
+    fun provideAppDb(app : Application) : AppDatabase {
      return Room
          .databaseBuilder(app,AppDatabase::class.java,DATABASE_NAME)
          .fallbackToDestructiveMigration()
