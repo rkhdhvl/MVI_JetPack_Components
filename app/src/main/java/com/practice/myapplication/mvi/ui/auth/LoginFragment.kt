@@ -37,6 +37,7 @@ class LoginFragment : BaseAuthFragment() {
         }
     }
 
+    // setting the input fields for login if not null
     fun subscribeObservers(){
         viewModel.viewState.observe(viewLifecycleOwner, Observer{
             it.loginFields?.let{
@@ -46,6 +47,7 @@ class LoginFragment : BaseAuthFragment() {
         })
     }
 
+    // function executed for login action
     fun login(){
         viewModel.setStateEvent(
             AuthStateEvent.LoginAttemptEvent(

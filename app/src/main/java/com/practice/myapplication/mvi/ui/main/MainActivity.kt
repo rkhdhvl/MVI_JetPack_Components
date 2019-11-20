@@ -1,11 +1,9 @@
 package com.practice.myapplication.mvi.ui.main
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.Observer
 import com.practice.myapplication.R
 import com.practice.myapplication.mvi.ui.BaseActivity
