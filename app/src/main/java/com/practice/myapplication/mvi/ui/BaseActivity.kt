@@ -85,7 +85,7 @@ abstract class BaseActivity: DaggerAppCompatActivity(),
         }
     }
 
-    abstract fun expandAppBar()
+
 }
 
 
