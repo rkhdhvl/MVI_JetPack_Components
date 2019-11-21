@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
+import com.google.android.material.appbar.AppBarLayout
 import com.practice.myapplication.R
 import com.practice.myapplication.mvi.ui.BaseActivity
 import com.practice.myapplication.mvi.ui.auth.state.AuthStateEvent
@@ -115,7 +116,7 @@ class AuthActivity : BaseActivity(),
     }
 
     override fun expandAppBar() {
-        // ignore
+     findViewById<AppBarLayout>(R.id.app_bar).setExpanded(true)
     }
 }
 
