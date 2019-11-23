@@ -19,5 +19,12 @@ abstract class BaseAuthFragment : DaggerFragment() {
         viewModel = activity?.run {
             ViewModelProvider(this, providerFactory).get(AuthViewModel::class.java)
         } ?: throw Exception("Invalid Activity") as Throwable
+        // whenever any other fragment comes to the fore front, into view , cancel active jobs
+        cancelActiveJobs()
+    }
+
+    private fun cancelActiveJobs()
+    {
+        viewModel.cancelActiveJobs()
     }
 }

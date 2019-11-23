@@ -10,6 +10,7 @@ import com.practice.myapplication.mvi.api.auth.network_responses.RegistrationRes
 import com.practice.myapplication.mvi.models.AuthToken
 import com.practice.myapplication.mvi.persistence.AccountPropertiesDao
 import com.practice.myapplication.mvi.persistence.AuthTokenDao
+import com.practice.myapplication.mvi.repository.JobManager
 import com.practice.myapplication.mvi.repository.NetworkBoundResource
 import com.practice.myapplication.mvi.session.SessionManager
 import com.practice.myapplication.mvi.ui.DataState
@@ -38,13 +39,12 @@ constructor(
     val sessionManager: SessionManager,
     val sharedPreferences: SharedPreferences,
     val sharedPrefsEditor: SharedPreferences.Editor
-)
+) : JobManager("AuthRepository")
 {
 
     private val TAG: String = "AppDebug"
 
     private var repositoryJob: Job? = null
-
 
     fun attemptLogin(email: String, password: String): LiveData<DataState<AuthViewState>>{
 
@@ -122,8 +122,7 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("attemptLogin",job)
             }
 
         }.asLiveData()
@@ -217,8 +216,7 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("attemptRegistration",job)
             }
 
         }.asLiveData()
@@ -294,8 +292,7 @@ constructor(
                 }
 
                 override fun setJob(job: Job) {
-                    repositoryJob?.cancel()
-                    repositoryJob = job
+                    addJob("checkPreviousAuthUser",job)
                 }
 
 
@@ -332,14 +329,6 @@ constructor(
             }
         }
     }
-
-    fun cancelActiveJobs(){
-        Log.d(TAG, "AuthRepository: Cancelling on-going jobs...")
-        repositoryJob?.cancel()
-    }
-
-
-
 }
 
 

@@ -13,10 +13,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.practice.myapplication.R
 import com.practice.myapplication.mvi.ui.BaseActivity
 import com.practice.myapplication.mvi.ui.auth.AuthActivity
+import com.practice.myapplication.mvi.ui.main.account.BaseAccountFragment
 import com.practice.myapplication.mvi.ui.main.account.ChangePasswordFragment
 import com.practice.myapplication.mvi.ui.main.account.UpdateAccountFragment
+import com.practice.myapplication.mvi.ui.main.blog.BaseBlogFragment
 import com.practice.myapplication.mvi.ui.main.blog.UpdateBlogFragment
 import com.practice.myapplication.mvi.ui.main.blog.ViewBlogFragment
+import com.practice.myapplication.mvi.ui.main.create_blog.BaseCreateBlogFragment
 import com.practice.myapplication.mvi.util.BottomNavController
 import com.practice.myapplication.mvi.util.BottomNavController.*
 import com.practice.myapplication.mvi.util.setUpNavigation
@@ -104,7 +107,29 @@ class MainActivity : BaseActivity(), NavGraphProvider,
     }
 
     override fun onGraphChange() {
-       // TODO("What needs to happen when the graph changes")
+        cancelActiveJobs()
+        expandAppBar()
+    }
+
+    private fun cancelActiveJobs(){
+        val fragments = bottomNavController.fragmentManager
+            .findFragmentById(bottomNavController.containerId)
+            ?.childFragmentManager
+            ?.fragments
+        if(fragments != null){
+            for(fragment in fragments){
+                if(fragment is BaseAccountFragment){
+                    fragment.cancelActiveJobs()
+                }
+                if(fragment is BaseBlogFragment){
+                    fragment.cancelActiveJobs()
+                }
+                if(fragment is BaseCreateBlogFragment){
+                    fragment.cancelActiveJobs()
+                }
+            }
+        }
+        displayProgressBar(false)
     }
 
     private fun setUpActionBar()

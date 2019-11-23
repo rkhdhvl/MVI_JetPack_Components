@@ -6,7 +6,7 @@ import com.practice.myapplication.mvi.repository.auth.AuthRepository
 import com.practice.myapplication.mvi.ui.BaseViewModel
 import com.practice.myapplication.mvi.ui.DataState
 import com.practice.myapplication.mvi.ui.auth.state.AuthStateEvent
-import com.practice.myapplication.mvi.ui.auth.state.AuthStateEvent.CheckPreviousAuthEvent
+import com.practice.myapplication.mvi.ui.auth.state.AuthStateEvent.*
 import com.practice.myapplication.mvi.ui.auth.state.AuthViewState
 import com.practice.myapplication.mvi.ui.auth.state.LoginFields
 import com.practice.myapplication.mvi.ui.auth.state.RegistrationFields
@@ -18,14 +18,14 @@ class AuthViewModel
     override fun handleStateEvent(stateEvent: AuthStateEvent): LiveData<DataState<AuthViewState>> {
         when(stateEvent){
 
-            is AuthStateEvent.LoginAttemptEvent -> {
+            is LoginAttemptEvent -> {
                 return authRepository.attemptLogin(
                     stateEvent.email,
                     stateEvent.password
                 )
             }
 
-            is AuthStateEvent.RegisterAttemptEvent -> {
+            is RegisterAttemptEvent -> {
                 return authRepository.attemptRegistration(
                     stateEvent.email,
                     stateEvent.username,
@@ -37,6 +37,16 @@ class AuthViewModel
             is CheckPreviousAuthEvent -> {
                 return authRepository.checkPreviousAuthUser()
             }
+
+            is None ->{
+                return object: LiveData<DataState<AuthViewState>>(){
+                    override fun onActive() {
+                        super.onActive()
+                        value = DataState.data(null, null)
+                    }
+                }
+            }
+
         }
     }
 
@@ -72,9 +82,14 @@ class AuthViewModel
     }
 
     fun cancelActiveJobs(){
+        handlePendingData()
         authRepository.cancelActiveJobs()
     }
 
+    // This is for stop showing the progress bar
+    fun handlePendingData(){
+        setStateEvent(None())
+    }
 
     override fun onCleared() {
         super.onCleared()
