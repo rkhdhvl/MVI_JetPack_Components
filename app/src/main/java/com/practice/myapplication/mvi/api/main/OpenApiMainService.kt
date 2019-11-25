@@ -3,6 +3,7 @@ package com.practice.myapplication.mvi.api.main
 import androidx.lifecycle.LiveData
 import com.codingwithmitch.openapi.models.AccountProperties
 import com.practice.myapplication.mvi.api.GenericResponse
+import com.practice.myapplication.mvi.api.main.responses.BlogListSearchResponse
 import com.practice.myapplication.mvi.util.GenericApiResponse
 import retrofit2.http.*
 
@@ -30,5 +31,12 @@ interface OpenApiMainService {
         @Field("confirm_new_password") confirmNewPassword: String
     ): LiveData<GenericApiResponse<GenericResponse>>
 
+    @GET("blog/list")
+    fun searchListBlogPosts(
+        @Header("Authorization") authorization: String,
+        @Query("search") query:String,
+        @Query("ordering") ordering : String,
+        @Query("page") page:Int
+    ): LiveData<GenericApiResponse<BlogListSearchResponse>>
 
 }
