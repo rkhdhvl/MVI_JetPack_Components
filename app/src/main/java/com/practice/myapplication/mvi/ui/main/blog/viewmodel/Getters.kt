@@ -1,5 +1,8 @@
 package com.practice.myapplication.mvi.ui.main.blog.viewmodel
 
+import android.net.Uri
+import com.practice.myapplication.mvi.models.BlogPost
+
 fun BlogViewModel.getFilter(): String {
     getCurrentViewStateOrNew().let {
         return it.blogFields.filter
@@ -37,4 +40,25 @@ fun BlogViewModel.isAuthorOfBlogPost(): Boolean{
     getCurrentViewStateOrNew().let {
         return it.viewBlogFields.isAuthorOfBlogPost
     }
+}
+
+fun BlogViewModel.getBlogPost(): BlogPost {
+    getCurrentViewStateOrNew().let {
+        return it.viewBlogFields.blogPost?.let {
+            return it
+        }?: getDummyBlogPost()
+    }
+}
+
+fun BlogViewModel.getDummyBlogPost(): BlogPost{
+    return BlogPost(-1, "" , "", "", "", 1, "")
+}
+
+fun BlogViewModel.getUpdatedBlogUri(): Uri? {
+    getCurrentViewStateOrNew().let {
+        it.updatedBlogFields.updatedImageUri?.let {
+            return it
+        }
+    }
+    return null
 }

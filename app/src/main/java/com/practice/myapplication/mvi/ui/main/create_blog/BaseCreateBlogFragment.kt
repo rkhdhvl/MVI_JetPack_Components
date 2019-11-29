@@ -9,9 +9,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import com.bumptech.glide.RequestManager
+import com.codingwithmitch.openapi.ui.UICommunicationListener
 import com.practice.myapplication.R
 import com.practice.myapplication.mvi.ui.DataStateChangeListener
 import com.practice.myapplication.mvi.ui.main.account.AccountViewModel
+import com.practice.myapplication.mvi.ui.main.create_blog.viewmodel.CreateBlogViewModel
 import com.practice.myapplication.mvi.viewmodel.ViewModelProviderFactory
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -21,11 +24,16 @@ abstract class BaseCreateBlogFragment : DaggerFragment(){
     val TAG: String = "AppDebug"
 
     @Inject
+    lateinit var requestManager: RequestManager
+
+    @Inject
     lateinit var providerFactory: ViewModelProviderFactory
 
     lateinit var stateChangeListener: DataStateChangeListener
 
-    lateinit var viewModel: AccountViewModel
+    lateinit var uiCommunicationListener: UICommunicationListener
+
+    lateinit var viewModel: CreateBlogViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -34,13 +42,19 @@ abstract class BaseCreateBlogFragment : DaggerFragment(){
         }catch(e: ClassCastException){
             Log.e(TAG, "$context must implement DataStateChangeListener" )
         }
+
+        try{
+            uiCommunicationListener = context as UICommunicationListener
+        }catch(e: ClassCastException){
+            Log.e(TAG, "$context must implement UICommunicationListener" )
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBarWithNavController(R.id.createBlogFragment, activity as AppCompatActivity)
         viewModel = activity?.run {
-            ViewModelProvider(this, providerFactory).get(AccountViewModel::class.java)
+            ViewModelProvider(this, providerFactory).get(CreateBlogViewModel::class.java)
         }?: throw Exception("Invalid Activity")
 
 

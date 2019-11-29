@@ -11,10 +11,10 @@ data class BlogViewState (
     var blogFields: BlogFields = BlogFields(),
 
     // ViewBlogFragment vars
-    var viewBlogFields: ViewBlogFields = ViewBlogFields()
+    var viewBlogFields: ViewBlogFields = ViewBlogFields(),
 
     // UpdateBlogFragment vars
-   // var updatedBlogFields: UpdatedBlogFields = UpdatedBlogFields()
+    var updatedBlogFields: UpdatedBlogFields = UpdatedBlogFields()
 )
 {
     data class BlogFields(
@@ -32,9 +32,9 @@ data class BlogViewState (
         var isAuthorOfBlogPost: Boolean = false
     )
 
-    /*data class UpdatedBlogFields(
+    data class UpdatedBlogFields(
         var updatedBlogTitle: String? = null,
         var updatedBlogBody: String? = null,
         var updatedImageUri: Uri? = null
-    )*/
+    )
 }

@@ -10,11 +10,13 @@ import com.practice.myapplication.mvi.ui.BaseViewModel
 import com.practice.myapplication.mvi.ui.DataState
 import com.practice.myapplication.mvi.ui.Loading
 import com.practice.myapplication.mvi.ui.main.blog.state.BlogStateEvent
-import com.practice.myapplication.mvi.ui.main.blog.state.BlogStateEvent.None
+import com.practice.myapplication.mvi.ui.main.blog.state.BlogStateEvent.*
 import com.practice.myapplication.mvi.ui.main.blog.state.BlogViewState
 import com.practice.myapplication.mvi.util.AbsentLiveData
 import com.practice.myapplication.mvi.util.PreferenceKeys.Companion.BLOG_FILTER
 import com.practice.myapplication.mvi.util.PreferenceKeys.Companion.BLOG_ORDER
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 class BlogViewModel
@@ -42,7 +44,7 @@ constructor(
 
     override fun handleStateEvent(stateEvent: BlogStateEvent): LiveData<DataState<BlogViewState>> {
         when (stateEvent) {
-            is BlogStateEvent.BlogSearchEvent -> {
+            is BlogSearchEvent -> {
                 return sessionManager.cachedToken.value?.let { authToken ->
                     blogRepository.searchBlogPosts(
                         authToken = authToken,
@@ -55,8 +57,45 @@ constructor(
                 } ?: return AbsentLiveData.create()
             }
 
-            is BlogStateEvent.CheckAuthorOfBlogPost ->{
-                return AbsentLiveData.create()
+            is CheckAuthorOfBlogPost -> {
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    blogRepository.isAuthorOfBlogPost(
+                        authToken = authToken,
+                        slug = getSlug()
+                    )
+                }?: AbsentLiveData.create()
+            }
+
+            is DeleteBlogPostEvent -> {
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    blogRepository.deleteBlogPost(
+                        authToken = authToken,
+                        blogPost = getBlogPost()
+                    )
+                }?: AbsentLiveData.create()
+            }
+
+            is UpdateBlogPostEvent -> {
+
+                return sessionManager.cachedToken.value?.let { authToken ->
+
+                    val title = RequestBody.create(
+                        MediaType.parse("text/plain"),
+                        stateEvent.title
+                    )
+                    val body = RequestBody.create(
+                        MediaType.parse("text/plain"),
+                        stateEvent.body
+                    )
+
+                    blogRepository.updateBlogPost(
+                        authToken = authToken,
+                        slug = getSlug(),
+                        title = title,
+                        body = body,
+                        image = stateEvent.image
+                    )
+                }?: AbsentLiveData.create()
             }
 
             is None ->{

@@ -6,6 +6,7 @@ import com.practice.myapplication.mvi.persistence.AppDatabase
 import com.practice.myapplication.mvi.persistence.BlogPostDao
 import com.practice.myapplication.mvi.repository.main.AccountRepository
 import com.practice.myapplication.mvi.repository.main.BlogRepository
+import com.practice.myapplication.mvi.repository.main.CreateBlogRepository
 import com.practice.myapplication.mvi.session.SessionManager
 import dagger.Module
 import dagger.Provides
@@ -48,6 +49,20 @@ class MainModule {
     ):BlogRepository
     {
       return BlogRepository(openApiMainService,blogPostDao,sessionManager)
+    }
+
+    @MainScope
+    @Provides
+    fun provideCreateBlogRepository(
+        openApiMainService: OpenApiMainService,
+        blogPostDao: BlogPostDao,
+        sessionManager: SessionManager
+    ) : CreateBlogRepository{
+        return CreateBlogRepository(
+            openApiMainService,
+            blogPostDao,
+            sessionManager
+        )
     }
 
 }

@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.RequestManager
+import com.codingwithmitch.openapi.ui.UICommunicationListener
 import com.practice.myapplication.R
 import com.practice.myapplication.mvi.ui.DataStateChangeListener
 import com.practice.myapplication.mvi.ui.main.blog.viewmodel.BlogViewModel
@@ -31,12 +32,20 @@ abstract class BaseBlogFragment : DaggerFragment() {
 
     lateinit var viewModel: BlogViewModel
 
+    lateinit var uiCommunicationListener: UICommunicationListener
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        try {
+        try{
             stateChangeListener = context as DataStateChangeListener
-        } catch (e: ClassCastException) {
-            Log.e(TAG, "$context must implement DataStateChangeListener")
+        }catch(e: ClassCastException){
+            Log.e(TAG, "$context must implement DataStateChangeListener" )
+        }
+
+        try{
+            uiCommunicationListener = context as UICommunicationListener
+        }catch(e: ClassCastException){
+            Log.e(TAG, "$context must implement UICommunicationListener" )
         }
     }
 

@@ -3,8 +3,11 @@ package com.practice.myapplication.mvi.api.main
 import androidx.lifecycle.LiveData
 import com.codingwithmitch.openapi.models.AccountProperties
 import com.practice.myapplication.mvi.api.GenericResponse
+import com.practice.myapplication.mvi.api.auth.network_responses.BlogCreateUpdateResponse
 import com.practice.myapplication.mvi.api.main.responses.BlogListSearchResponse
 import com.practice.myapplication.mvi.util.GenericApiResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface OpenApiMainService {
@@ -39,4 +42,35 @@ interface OpenApiMainService {
         @Query("page") page:Int
     ): LiveData<GenericApiResponse<BlogListSearchResponse>>
 
+    @GET("blog/{slug}/is_author")
+    fun isAuthorOfBlogPost(
+        @Header("Authorization") authorization: String,
+        @Path("slug") slug: String
+    ): LiveData<GenericApiResponse<GenericResponse>>
+
+    @DELETE("blog/{slug}/delete")
+    fun deleteBlogPost(
+        @Header("Authorization") authorization: String,
+        @Path("slug") slug: String
+    ): LiveData<GenericApiResponse<GenericResponse>>
+
+    @Multipart
+    @PUT("blog/{slug}/update")
+    fun updateBlog(
+        @Header("Authorization") authorization: String,
+        @Path("slug") slug: String,
+        @Part("title") title: RequestBody,
+        @Part("body") body: RequestBody,
+        @Part image: MultipartBody.Part?
+    ): LiveData<GenericApiResponse<BlogCreateUpdateResponse>>
+
+
+    @Multipart
+    @POST("blog/create")
+    fun createBlog(
+        @Header("Authorization") authorization: String,
+        @Part("title") title: RequestBody,
+        @Part("body") body: RequestBody,
+        @Part image: MultipartBody.Part?
+    ): LiveData<GenericApiResponse<BlogCreateUpdateResponse>>
 }

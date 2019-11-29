@@ -33,6 +33,7 @@ import com.practice.myapplication.mvi.ui.main.blog.viewmodel.*
 import com.practice.myapplication.mvi.util.ErrorHandling
 import com.practice.myapplication.mvi.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_blog.*
+import kotlinx.android.synthetic.main.fragment_view_blog.*
 import java.lang.Error
 import javax.inject.Inject
 
@@ -94,10 +95,16 @@ class BlogFragment : BaseBlogFragment(), BlogListAdapter.Interaction,
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             Log.d(TAG, "BlogFragment, ViewState : ${viewState}")
             if (viewState != null) {
-                recyclerViewAdapter.submitList(
-                    blogList = viewState.blogFields.blogList,
-                    isQueryExhausted = viewState.blogFields.isQueryExhausted
-                )
+                recyclerViewAdapter.apply {
+                    preloadGlideImages(
+                        requestManager = requestManager,
+                        list = viewState.blogFields.blogList
+                    )
+                    submitList(
+                        blogList = viewState.blogFields.blogList,
+                        isQueryExhausted = viewState.blogFields.isQueryExhausted
+                    )
+                }
             }
         })
     }
@@ -125,6 +132,19 @@ class BlogFragment : BaseBlogFragment(), BlogListAdapter.Interaction,
                     viewModel.setQueryExhausted(true)
                 }
             }
+        }
+    }
+
+    // Prepare the images that will be displayed in the RecyclerView.
+    // This also ensures if the network connection is lost, they will be in the cache
+    fun preloadGlideImages(
+        requestManager: RequestManager,
+        list: List<BlogPost>
+    ){
+        for(blogPost in list){
+            requestManager
+                .load(blogPost.image)
+                .preload()
         }
     }
 
